@@ -21,8 +21,8 @@
 
 #include "PCMCodec.h"
 #include "utils/log.h"
-#include "utils/EndianSwap.h"
 #include "utils/StringUtils.h"
+#include "utils/EndianSwap.h"
 
 PCMCodec::PCMCodec()
 {
@@ -81,7 +81,7 @@ int PCMCodec::ReadPCM(BYTE *pBuffer, int size, int *actualsize)
 		iAmountRead = 2 * (iAmountRead / 2);
 
 		for (int i = 0; i < (iAmountRead / 2); i++)
-		  buffer[i] = Endian_Swap16(buffer[i]);
+		  buffer[i] = Endian_SwapBE16(buffer[i]);
  
 		*actualsize = iAmountRead;
 

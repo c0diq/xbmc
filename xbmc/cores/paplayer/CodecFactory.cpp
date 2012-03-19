@@ -120,14 +120,8 @@ ICodec* CodecFactory::CreateCodecDemux(const CStdString& strFile, const CStdStri
   if( strContent.Equals("audio/mpeg")
   ||  strContent.Equals("audio/mp3") )
     return new MP3Codec();
-  else if (strContent.Left(9).Equals("audio/l16") == 0)
-  {
-    PCMCodec * pcm_codec = new PCMCodec();
-    pcm_codec->SetMimeParams(strContent);
-    return pcm_codec;
-  }
   else if( strContent.Equals("audio/aac")
-    || strContent.Equals("audio/aacp") )
+        || strContent.Equals("audio/aacp") )
   {
     DVDPlayerCodec *pCodec = new DVDPlayerCodec;
     if (urlFile.GetProtocol() == "shout" )
@@ -140,8 +134,8 @@ ICodec* CodecFactory::CreateCodecDemux(const CStdString& strFile, const CStdStri
     return CreateOGGCodec(strFile,filecache);
   else if (strContent.Equals("audio/x-xbmc-pcm"))
     return (ICodec*)new BXACodec();  
-   else if (strContent.Equals("audio/flac") || strContent.Equals("audio/x-flac") || strContent.Equals("application/x-flac"))
-     return new FLACCodec();
+  else if (strContent.Equals("audio/flac") || strContent.Equals("audio/x-flac") || strContent.Equals("application/x-flac"))
+    return new FLACCodec();
 
   if (urlFile.GetProtocol() == "lastfm" || urlFile.GetProtocol() == "shout")
   {
@@ -176,6 +170,16 @@ ICodec* CodecFactory::CreateCodecDemux(const CStdString& strFile, const CStdStri
     }
     delete codec;
   }
+
+  // check audio/l16 after wav since they have same mimetype somehow
+  // and we don't want PCM codec to decode wav files
+  if (strContent.Left(9).Equals("audio/l16") == 0)
+  {
+    PCMCodec * pcm_codec = new PCMCodec();
+    pcm_codec->SetMimeParams(strContent);
+    return pcm_codec;
+  }
+  
   if (urlFile.GetFileType().Equals("cdda"))
   {
     //lets see what it contains...
